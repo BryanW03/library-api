@@ -1,0 +1,196 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Library API",
+    "description": "CRUD API for managing Books and Authors collections in MongoDB.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "http://localhost:3000", "description": "Local server" },
+    { "url": "https://REPLACE-WITH-YOUR-RENDER-URL.onrender.com", "description": "Render server" }
+  ],
+  "paths": {
+    "/books": {
+      "get": {
+        "summary": "Get all books",
+        "tags": ["Books"],
+        "responses": {
+          "200": { "description": "List of books" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "post": {
+        "summary": "Create a new book",
+        "tags": ["Books"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BookInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Book created" },
+          "400": { "description": "Validation error" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/books/{id}": {
+      "get": {
+        "summary": "Get a single book by id",
+        "tags": ["Books"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Book found" },
+          "400": { "description": "Invalid id" },
+          "404": { "description": "Book not found" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "put": {
+        "summary": "Update a book by id",
+        "tags": ["Books"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/BookInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Book updated" },
+          "400": { "description": "Invalid id or validation error" },
+          "404": { "description": "Book not found" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a book by id",
+        "tags": ["Books"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Book deleted" },
+          "400": { "description": "Invalid id" },
+          "404": { "description": "Book not found" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/authors": {
+      "get": {
+        "summary": "Get all authors",
+        "tags": ["Authors"],
+        "responses": {
+          "200": { "description": "List of authors" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "post": {
+        "summary": "Create a new author",
+        "tags": ["Authors"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuthorInput" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Author created" },
+          "400": { "description": "Validation error" },
+          "500": { "description": "Server error" }
+        }
+      }
+    },
+    "/authors/{id}": {
+      "get": {
+        "summary": "Get a single author by id",
+        "tags": ["Authors"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Author found" },
+          "400": { "description": "Invalid id" },
+          "404": { "description": "Author not found" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "put": {
+        "summary": "Update an author by id",
+        "tags": ["Authors"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AuthorInput" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Author updated" },
+          "400": { "description": "Invalid id or validation error" },
+          "404": { "description": "Author not found" },
+          "500": { "description": "Server error" }
+        }
+      },
+      "delete": {
+        "summary": "Delete an author by id",
+        "tags": ["Authors"],
+        "parameters": [
+          { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": { "description": "Author deleted" },
+          "400": { "description": "Invalid id" },
+          "404": { "description": "Author not found" },
+          "500": { "description": "Server error" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BookInput": {
+        "type": "object",
+        "required": ["title", "author", "genre", "publishedYear", "pages", "isbn", "rating", "description"],
+        "properties": {
+          "title": { "type": "string", "example": "The Hobbit" },
+          "author": { "type": "string", "example": "J.R.R. Tolkien" },
+          "genre": { "type": "string", "example": "Fantasy" },
+          "publishedYear": { "type": "integer", "example": 1937 },
+          "pages": { "type": "integer", "example": 310 },
+          "isbn": { "type": "string", "example": "978-0261102217" },
+          "rating": { "type": "number", "example": 4.8 },
+          "description": { "type": "string", "example": "A hobbit goes on an unexpected journey." }
+        }
+      },
+      "AuthorInput": {
+        "type": "object",
+        "required": ["name", "birthYear", "nationality", "biography", "website", "booksPublished"],
+        "properties": {
+          "name": { "type": "string", "example": "J.R.R. Tolkien" },
+          "birthYear": { "type": "integer", "example": 1892 },
+          "nationality": { "type": "string", "example": "British" },
+          "biography": { "type": "string", "example": "English writer and philologist." },
+          "website": { "type": "string", "example": "https://www.tolkiensociety.org" },
+          "booksPublished": { "type": "integer", "example": 25 }
+        }
+      }
+    }
+  }
+}
