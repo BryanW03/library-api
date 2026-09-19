@@ -5,10 +5,10 @@
     "description": "CRUD API for managing Books and Authors collections in MongoDB.",
     "version": "1.0.0"
   },
-  "servers": [
-    { "url": "http://localhost:3000", "description": "Local server" },
-    { "url": "https://REPLACE-WITH-YOUR-RENDER-URL.onrender.com", "description": "Render server" }
-  ],
+ "servers": [
+  { "url": "http://localhost:3000", "description": "Local server" },
+  { "url": "https://library-api-1wil.onrender.com", "description": "Render server" }
+],
   "paths": {
     "/books": {
       "get": {
