@@ -2,14 +2,58 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Library API",
-    "description": "CRUD API for managing Books and Authors collections in MongoDB.",
-    "version": "1.0.0"
+    "description": "CRUD API for managing Books and Authors collections in MongoDB. Write operations (POST, PUT, DELETE) are protected and require the user to be logged in via GitHub OAuth (use /login in a browser tab first, since Swagger's 'Execute' shares your browser's session cookie).",
+    "version": "1.1.0"
   },
- "servers": [
-  { "url": "http://localhost:3000", "description": "Local server" },
-  { "url": "https://library-api-1wil.onrender.com", "description": "Render server" }
-],
+  "servers": [
+    { "url": "http://localhost:3000", "description": "Local server" },
+    { "url": "https://library-api-1wil.onrender.com", "description": "Render server" }
+  ],
+  "tags": [
+    { "name": "Auth", "description": "GitHub OAuth login/logout" },
+    { "name": "Books" },
+    { "name": "Authors" }
+  ],
   "paths": {
+    "/login": {
+      "get": {
+        "summary": "Log in with GitHub (starts the OAuth flow)",
+        "tags": ["Auth"],
+        "description": "Open this URL directly in a browser tab. It redirects to GitHub, then back to /auth/github/callback once you authorize the app.",
+        "responses": {
+          "302": { "description": "Redirects to GitHub for authorization" }
+        }
+      }
+    },
+    "/auth/github/callback": {
+      "get": {
+        "summary": "GitHub OAuth callback",
+        "tags": ["Auth"],
+        "description": "GitHub redirects here automatically after the user authorizes the app. Not meant to be called directly.",
+        "responses": {
+          "200": { "description": "Logged in successfully, session created" },
+          "302": { "description": "Redirected back on failure" }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "summary": "Log out of the current session",
+        "tags": ["Auth"],
+        "responses": {
+          "200": { "description": "Logged out successfully" }
+        }
+      }
+    },
+    "/login-status": {
+      "get": {
+        "summary": "Check whether the current session is authenticated",
+        "tags": ["Auth"],
+        "responses": {
+          "200": { "description": "Returns { loggedIn: true/false, user? }" }
+        }
+      }
+    },
     "/books": {
       "get": {
         "summary": "Get all books",
@@ -20,7 +64,7 @@
         }
       },
       "post": {
-        "summary": "Create a new book",
+        "summary": "Create a new book (protected: requires login)",
         "tags": ["Books"],
         "requestBody": {
           "required": true,
@@ -33,6 +77,7 @@
         "responses": {
           "201": { "description": "Book created" },
           "400": { "description": "Validation error" },
+          "401": { "description": "Not authenticated - log in via /login first" },
           "500": { "description": "Server error" }
         }
       }
@@ -52,7 +97,7 @@
         }
       },
       "put": {
-        "summary": "Update a book by id",
+        "summary": "Update a book by id (protected: requires login)",
         "tags": ["Books"],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
@@ -68,12 +113,13 @@
         "responses": {
           "200": { "description": "Book updated" },
           "400": { "description": "Invalid id or validation error" },
+          "401": { "description": "Not authenticated - log in via /login first" },
           "404": { "description": "Book not found" },
           "500": { "description": "Server error" }
         }
       },
       "delete": {
-        "summary": "Delete a book by id",
+        "summary": "Delete a book by id (protected: requires login)",
         "tags": ["Books"],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
@@ -81,6 +127,7 @@
         "responses": {
           "200": { "description": "Book deleted" },
           "400": { "description": "Invalid id" },
+          "401": { "description": "Not authenticated - log in via /login first" },
           "404": { "description": "Book not found" },
           "500": { "description": "Server error" }
         }
@@ -96,7 +143,7 @@
         }
       },
       "post": {
-        "summary": "Create a new author",
+        "summary": "Create a new author (protected: requires login)",
         "tags": ["Authors"],
         "requestBody": {
           "required": true,
@@ -109,6 +156,7 @@
         "responses": {
           "201": { "description": "Author created" },
           "400": { "description": "Validation error" },
+          "401": { "description": "Not authenticated - log in via /login first" },
           "500": { "description": "Server error" }
         }
       }
@@ -128,7 +176,7 @@
         }
       },
       "put": {
-        "summary": "Update an author by id",
+        "summary": "Update an author by id (protected: requires login)",
         "tags": ["Authors"],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
@@ -144,12 +192,13 @@
         "responses": {
           "200": { "description": "Author updated" },
           "400": { "description": "Invalid id or validation error" },
+          "401": { "description": "Not authenticated - log in via /login first" },
           "404": { "description": "Author not found" },
           "500": { "description": "Server error" }
         }
       },
       "delete": {
-        "summary": "Delete an author by id",
+        "summary": "Delete an author by id (protected: requires login)",
         "tags": ["Authors"],
         "parameters": [
           { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
@@ -157,6 +206,7 @@
         "responses": {
           "200": { "description": "Author deleted" },
           "400": { "description": "Invalid id" },
+          "401": { "description": "Not authenticated - log in via /login first" },
           "404": { "description": "Author not found" },
           "500": { "description": "Server error" }
         }

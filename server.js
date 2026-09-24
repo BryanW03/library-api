@@ -2,12 +2,15 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session');
+const passport = require('./config/passport');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 
 const { initDb } = require('./config/db');
 const booksRoutes = require('./routes/books');
 const authorsRoutes = require('./routes/authors');
+const authRoutes = require('./routes/auth');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -15,7 +18,19 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Sessions + Passport (required for GitHub OAuth login/logout)
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Routes
+app.use('/', authRoutes);
 app.use('/books', booksRoutes);
 app.use('/authors', authorsRoutes);
 
